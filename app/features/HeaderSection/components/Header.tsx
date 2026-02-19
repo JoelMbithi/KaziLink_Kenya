@@ -238,13 +238,13 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
-            <a href="#" className="flex items-center gap-3 no-underline z-50 relative group">
+            <a href="/" className="flex items-center gap-3 no-underline z-50 relative group">
               <div className="relative">
-                <div className="w-12 h-12 border border-[#E5E7EB] rounded-lg flex items-center justify-center bg-white group-hover:border-[#0B5D1E] transition-colors">
+                <div className="w-12 h-12 border border-[#94eca8] rounded-lg flex items-center justify-center bg-white group-hover:border-[#0B5D1E] transition-colors">
                   <div className="flex gap-1">
-                    <div className="w-1 h-3 bg-[#0B5D1E] rounded-full transform rotate-45 transition-transform group-hover:rotate-0"></div>
-                    <div className="w-1 h-4 bg-[#C9A227] rounded-full transform -rotate-45 mt-1 transition-transform group-hover:rotate-0"></div>
-                    <div className="w-1 h-3 bg-[#0B5D1E] rounded-full transform rotate-45 transition-transform group-hover:rotate-0"></div>
+                    <div className="w-1 h-3 bg-[#05bb2f] rounded-full transform rotate-45 transition-transform group-hover:rotate-0"></div>
+                    <div className="w-1 h-4 bg-[#dfb018] rounded-full transform -rotate-45 mt-1 transition-transform group-hover:rotate-0"></div>
+                    <div className="w-1 h-3 bg-[#05bb2f] rounded-full transform rotate-45 transition-transform group-hover:rotate-0"></div>
                   </div>
                 </div>
               </div>
@@ -470,7 +470,7 @@ export default function Header() {
                 </a>
                 
                 <a 
-                  href="#contact" 
+                  href="/features/Auth/register" 
                   className="ring-1 ring-[#00d832]  text-[#00d832] px-6 py-3 rounded-lg font-medium hover:bg-[#59f193] hover:text-white transition-all shadow-md hover:shadow-lg"
                 >
                   Get Started

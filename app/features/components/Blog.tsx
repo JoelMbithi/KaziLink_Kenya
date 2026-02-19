@@ -1,7 +1,13 @@
+"user client"
 import React from 'react';
 import { Building, Users, Upload, Briefcase, CheckCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { PiMapPin } from "react-icons/pi";
+
 
 const Blog = () => {
+
+  const router = useRouter()
   // Current job openings - real data
   const currentJobs = [
     { role: 'Software Developer', company: 'Safaricom', location: 'Nairobi', type: 'Full-time', posted: '2 days ago' },
@@ -40,129 +46,151 @@ const Blog = () => {
 
       {/* Main Content */}
       <div className="grid md:grid-cols-2 gap-8 mb-16">
-        
-        {/* Employers Section */}
-        <div className="border border-gray-200 rounded-xl p-6">
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mr-4">
-              <Building className="text-green-400" size={22} />
-            </div>
-            <div>
-              <h3 className="text-lg font-medium text-gray-900">For Employers</h3>
-              <p className="text-sm text-gray-600">Hire the right people</p>
-            </div>
-          </div>
-
-          <p className="text-gray-600 mb-6 text-sm">
-            Post jobs and find qualified candidates from Kenya's largest professional network.
-          </p>
-
-          <div className="space-y-3 mb-8">
-            <div className="flex items-center">
-              <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                <CheckCircle className="text-green-400" size={14} />
-              </div>
-              <span className="text-sm text-gray-700">Free job postings</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                <CheckCircle className="text-green-400" size={14} />
-              </div>
-              <span className="text-sm text-gray-700">View candidate profiles</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                <CheckCircle className="text-green-400" size={14} />
-              </div>
-              <span className="text-sm text-gray-700">Direct messaging</span>
-            </div>
-          </div>
-
-          <button className="w-full bg-[#0B5D1E] text-white py-3 rounded-lg font-medium hover:bg-[#0B5D1E]/90 transition-colors">
-            Post a Job - Free
-          </button>
-
-          {/* Current Openings */}
-          <div className="mt-8 pt-8 border-t border-gray-100">
-            <h4 className="font-medium text-gray-900 mb-4">Current openings</h4>
-            <div className="space-y-3">
-              {currentJobs.slice(0, 2).map((job, index) => (
-                <div key={index} className="p-3 bg-gray-50 rounded border border-gray-200">
-                  <div className="font-medium text-gray-900 text-sm">{job.role}</div>
-                  <div className="text-xs text-gray-600 mt-1">{job.company} • {job.location}</div>
-                  <div className="flex items-center justify-between mt-2">
-                    <span className="text-xs text-gray-500">{job.type}</span>
-                    <span className="text-xs text-gray-500">{job.posted}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Job Seekers Section */}
-        <div className="border border-gray-200 rounded-xl p-6">
-          <div className="flex items-center gap-4  mb-6">
-            <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mr-4">
-              <Users className="text-green-400" size={22} />
-            </div>
-            <div>
-              <h3 className="text-lg font-medium text-gray-900">For Job Seekers</h3>
-              <p className="text-sm text-gray-600">Find your next role</p>
-            </div>
-          </div>
-
-          <p className="text-gray-600 mb-6 text-sm">
-            Browse thousands of jobs from Kenyan employers and apply directly.
-          </p>
-
-          <div className="space-y-3 mb-8">
-            <div className="flex items-center">
-              <div className="w-5 h-5 bg-slate-100 rounded-full flex items-center justify-center mr-3">
-                
-                <CheckCircle className="text-green-400 " size={14} />
-              </div>
-              <span className="text-sm text-gray-700">Free profile</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                <CheckCircle className="text-green-400" size={14} />
-              </div>
-              <span className="text-sm text-gray-700">Apply with one click</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                <CheckCircle className="text-green-400" size={14} />
-              </div>
-              <span className="text-sm text-gray-700">Get job alerts</span>
-            </div>
-          </div>
-
-          <button className="w-full border border-[#0B5D1E] text-green-400 py-3 rounded-lg font-medium hover:bg-[#0B5D1E] hover:text-white transition-colors flex items-center justify-center gap-2">
-            <Upload size={18} />
-            Upload Your CV
-          </button>
-
-          {/* Recent Success */}
-          <div className="mt-8 pt-8 border-t border-gray-100">
-            <h4 className="font-medium text-gray-900 mb-4">Recently hired</h4>
-            <div className="space-y-3">
-              {recentHires.slice(0, 2).map((person, index) => (
-                <div key={index} className="flex items-center p-3 bg-gray-50 rounded border border-gray-200">
-                  <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mr-3">
-                    <span className="text-sm font-medium text-gray-700">{person.name.charAt(0)}</span>
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-medium text-gray-900 text-sm">{person.name}</div>
-                    <div className="text-xs text-gray-600">{person.position}</div>
-                  </div>
-                  <div className="text-xs text-gray-500">{person.found}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+  {/* Employers Section */}
+  <div className="bg-white border border-gray-200 rounded-2xl p-8 hover:shadow-lg transition-shadow duration-300">
+    <div className="flex items-center gap-4 mb-6">
+      <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center">
+        <Building className="text-emerald-600" size={24} />
       </div>
+      <div>
+        <h3 className="text-xl font-semibold text-gray-900">For Employers</h3>
+        <p className="text-sm text-gray-500">Find your next great hire</p>
+      </div>
+    </div>
+
+    <p className="text-gray-600 mb-6 text-base leading-relaxed">
+      Post jobs and connect with qualified candidates from Kenya's largest professional network. 
+      Our platform makes hiring simple and effective.
+    </p>
+
+    <div className="space-y-4 mb-8">
+      {[
+        "Post jobs for free",
+        "Browse candidate profiles",
+        "Direct messaging with applicants",
+        "Applicant tracking system"
+      ].map((feature, index) => (
+        <div key={index} className="flex items-start gap-3">
+          <div className="flex-shrink-0 w-5 h-5 bg-emerald-100 rounded-full flex items-center justify-center mt-0.5">
+            <CheckCircle className="text-emerald-600" size={14} />
+          </div>
+          <span className="text-sm text-gray-700">{feature}</span>
+        </div>
+      ))}
+    </div>
+
+    <button 
+      onClick={() => router.push("/features/ApplyJobs")} 
+      className="w-full bg-emerald-600 text-white py-3.5 px-4 rounded-xl font-medium hover:bg-emerald-700 transition-colors duration-200 shadow-sm hover:shadow"
+    >
+      Apply for Job - Free
+    </button>
+
+    {/* Current Openings */}
+    <div className="mt-10 pt-8 border-t border-gray-100">
+      <h4 className="font-semibold text-gray-900 mb-4">Featured openings</h4>
+      <div className="space-y-3">
+        {currentJobs.slice(0, 2).map((job, index) => (
+          <div 
+            key={index} 
+            className="p-4 bg-gray-50 rounded-xl border border-gray-100 hover:border-emerald-200 transition-colors cursor-pointer"
+          >
+            <div className="flex justify-between items-start mb-2">
+              <div className="font-medium text-gray-900">{job.role}</div>
+              <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">
+                {job.type}
+              </span>
+            </div>
+            <div className="text-sm text-gray-600 mb-2">{job.company}</div>
+            <div className="flex items-center justify-between text-xs">
+              <span className="flex items-center text-gray-500">
+                <PiMapPin size={12} className="mr-1" />
+                {job.location}
+              </span>
+              <span className="text-gray-400">{job.posted}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+      {currentJobs.length > 2 && (
+        <button className="w-full mt-4 text-sm text-emerald-600 hover:text-emerald-700 font-medium">
+          View all openings →
+        </button>
+      )}
+    </div>
+  </div>
+
+  {/* Job Seekers Section */}
+  <div className="bg-white border border-gray-200 rounded-2xl p-8 hover:shadow-lg transition-shadow duration-300">
+    <div className="flex items-center gap-4 mb-6">
+      <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center">
+        <Users className="text-emerald-600" size={24} />
+      </div>
+      <div>
+        <h3 className="text-xl font-semibold text-gray-900">For Job Seekers</h3>
+        <p className="text-sm text-gray-500">Discover your next opportunity</p>
+      </div>
+    </div>
+
+    <p className="text-gray-600 mb-6 text-base leading-relaxed">
+      Browse thousands of jobs from Kenya's top employers. Create your profile and apply with a single click.
+    </p>
+
+    <div className="space-y-4 mb-8">
+      {[
+        "Create a professional profile for free",
+        "Apply to jobs with one click",
+        "Receive personalized job alerts",
+        "Connect directly with employers"
+      ].map((feature, index) => (
+        <div key={index} className="flex items-start gap-3">
+          <div className="flex-shrink-0 w-5 h-5 bg-emerald-100 rounded-full flex items-center justify-center mt-0.5">
+            <CheckCircle className="text-emerald-600" size={14} />
+          </div>
+          <span className="text-sm text-gray-700">{feature}</span>
+        </div>
+      ))}
+    </div>
+
+    <button 
+      onClick={() => router.push("/features/Jobs")} 
+      className="w-full bg-white text-emerald-600 py-3.5 px-4 rounded-xl font-medium border-2 border-emerald-600 hover:bg-emerald-50 transition-colors duration-200"
+    >
+      Browse Jobs & Businesses
+    </button>
+
+    {/* Recent Success Stories */}
+    <div className="mt-10 pt-8 border-t border-gray-100">
+      <h4 className="font-semibold text-gray-900 mb-4">Recently hired</h4>
+      <div className="space-y-3">
+        {recentHires.slice(0, 2).map((person, index) => (
+          <div 
+            key={index} 
+            className="flex items-center p-4 bg-gray-50 rounded-xl border border-gray-100 hover:border-emerald-200 transition-colors"
+          >
+            <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center mr-3">
+              <span className="text-sm font-medium text-emerald-700">
+                {person.name.split(' ').map(n => n[0]).join('')}
+              </span>
+            </div>
+            <div className="flex-1">
+              <div className="font-medium text-gray-900">{person.name}</div>
+              <div className="text-sm text-gray-500">{person.position}</div>
+            </div>
+            <div className="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">
+              {person.found}
+            </div>
+          </div>
+        ))}
+      </div>
+      {recentHires.length > 2 && (
+        <button className="w-full mt-4 text-sm text-emerald-600 hover:text-emerald-700 font-medium">
+          See more success stories →
+        </button>
+      )}
+    </div>
+  </div>
+</div>
 
       {/* Platform Stats */}
       <div className="mb-16">

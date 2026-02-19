@@ -1,0 +1,568 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider   = "prisma-client-js"
+  output     = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User table for all users (business owners, job seekers, customers)
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  phone        String?
+  profileImage String?
+  role         Role     @default(JOB_SEEKER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Job Seeker specific fields
+  skills           String[] // Array of skills
+  experience       String? // Years of experience
+  education        String? // Highest education
+  expectedSalary   String? // Expected salary range
+  preferredJobType String? // Full-time, Part-time, etc.
+  preferredLocation String? // Preferred job location
+  resumeUrl        String? // Link to uploaded resume
+  portfolioUrl     String? // Portfolio or LinkedIn URL
+
+  // Employer specific fields
+  companyName        String?
+  companySize        String?
+  industry           String?
+  companyWebsite     String?
+  companyDescription String?
+  companyLocation    String?
+  contactPosition    String?
+  isEmailVerified    Boolean  @default(false)
+
+  // Auth
+  password      String?
+  emailVerified DateTime?
+
+  // Relationships
+  businesses          Business[]
+  jobListings         JobListing[]
+  jobApplications     JobApplication[]
+  reviews             Review[]
+  sentMessages        Message[]                  @relation("SentMessages")
+  receivedMessages    Message[]                  @relation("ReceivedMessages")
+  notifications       Notification[]
+  paymentsAsPayer     Payment[]                  @relation("PaymentPayer")
+  paymentsAsRecipient Payment[]                  @relation("PaymentRecipient")
+  conversations       Conversation[]             @relation("ConversationParticipants")
+  participantRefs     ConversationParticipants[] @relation("ConversationParticipantsUser")
+  bookings            Booking[]
+  savedItems          SavedItem[]
+
+  @@index([email])
+  @@index([role])
+  @@map("User")
+}
+
+// Business/Company profiles
+model Business {
+  id           String         @id @default(cuid())
+  name         String
+  description  String
+  category     String
+  location     String
+  logo         String?
+  coverImage   String?
+  contactPhone String
+  contactEmail String
+  website      String?
+  rating       Float          @default(0)
+  reviewCount  Int            @default(0)
+  isVerified   Boolean        @default(false)
+  isFeatured   Boolean        @default(false)
+  status       BusinessStatus @default(PENDING)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  // Relationships
+  ownerId       String
+  owner         User           @relation(fields: [ownerId], references: [id])
+  services      Service[]
+  galleryImages GalleryImage[]
+  jobListings   JobListing[]
+  reviews       Review[]
+  bookings      Booking[]
+  savedItems    SavedItem[]
+
+  @@index([name])
+  @@index([category])
+  @@index([location])
+  @@index([rating])
+  @@index([ownerId])
+  @@map("Business")
+}
+
+// Services offered by businesses
+model Service {
+  id            String   @id @default(cuid())
+  name          String
+  description   String
+  price         Float?
+  priceUnit     String? // e.g., "per hour", "per project", "starting from"
+  duration      String? // e.g., "2-3 hours", "1 day"
+  category      String
+  tags          String[] // e.g., ["photography", "wedding", "professional"]
+  isAvailable   Boolean  @default(true)
+  featuredImage String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relationships
+  businessId    String
+  business      Business       @relation(fields: [businessId], references: [id])
+  galleryImages GalleryImage[]
+  bookings      Booking[]
+  reviews       Review[]
+  savedItems    SavedItem[]
+
+  @@index([name])
+  @@index([category])
+  @@index([businessId])
+  @@index([tags])
+  @@map("Service")
+}
+
+// Gallery images for services
+model GalleryImage {
+  id           String   @id @default(cuid())
+  url          String
+  thumbnailUrl String?
+  altText      String?
+  caption      String?
+  category     String? // e.g., "wedding", "portrait", "event"
+  sizeType     SizeType @default(MEDIUM) // small, medium, large for display
+  displayOrder Int      @default(0)
+  isFeatured   Boolean  @default(false)
+  metadata     Json? // {width: 1920, height: 1080, format: "jpg"}
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relationships
+  serviceId  String?
+  service    Service?  @relation(fields: [serviceId], references: [id])
+  businessId String?
+  business   Business? @relation(fields: [businessId], references: [id])
+
+  @@index([serviceId])
+  @@index([businessId])
+  @@index([category])
+  @@index([isFeatured])
+  @@map("GalleryImage")
+}
+
+// Job listings
+model JobListing {
+  id                  String           @id @default(cuid())
+  title               String
+  description         String
+  company             String
+  location            String
+  jobType             JobType // FULL_TIME, PART_TIME, CONTRACT, etc.
+  salaryMin           Float?
+  salaryMax           Float?
+  salaryUnit          String? // "monthly", "yearly", "hourly"
+  salaryCurrency      String?          @default("USD")
+  experienceLevel     ExperienceLevel? // ENTRY, MID, SENIOR, EXECUTIVE
+  educationLevel      EducationLevel? // HIGH_SCHOOL, BACHELORS, MASTERS, PHD
+  requirements        String[]
+  benefits            String[]
+  isRemote            Boolean          @default(false)
+  isFeatured          Boolean          @default(false)
+  status              JobStatus        @default(ACTIVE)
+  applicationDeadline DateTime?
+  views               Int              @default(0)
+  applications        Int              @default(0)
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+
+  // Relationships
+  businessId      String?
+  business        Business?              @relation(fields: [businessId], references: [id])
+  postedById      String
+  postedBy        User                   @relation(fields: [postedById], references: [id])
+  jobApplications JobApplication[]
+  reviews         Review[]
+  categories      JobCategory[]          @relation("JobListingCategories")
+  categoryRefs    JobListingCategories[]
+  savedItems      SavedItem[]
+
+  @@index([title])
+  @@index([location])
+  @@index([jobType])
+  @@index([businessId])
+  @@index([postedById])
+  @@index([status])
+  @@index([createdAt])
+  @@map("JobListing")
+}
+
+// Job categories/tags
+model JobCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  icon        String?
+  createdAt   DateTime @default(now())
+
+  // Relationships
+  jobListings    JobListing[]           @relation("JobListingCategories")
+  jobListingRefs JobListingCategories[]
+
+  @@index([name])
+  @@map("JobCategory")
+}
+
+// Job applications
+model JobApplication {
+  id          String            @id @default(cuid())
+  coverLetter String?
+  resumeUrl   String?
+  status      ApplicationStatus @default(PENDING)
+  appliedAt   DateTime          @default(now())
+  reviewedAt  DateTime?
+  notes       String?
+
+  // Application form fields
+  fullName      String?
+  email         String?
+  phone         String?
+  currentRole   String?
+  yearsOfExperience String?
+  education     String?
+  noticePeriod  String?
+  expectedSalary Float?
+  salaryCurrency String? @default("KES")
+  portfolio     String?
+  referralSource String?
+  workAuth      String?
+  willingToRelocate Boolean @default(false)
+  consentGiven  Boolean @default(false)
+
+  // Relationships
+  jobId       String
+  job         JobListing @relation(fields: [jobId], references: [id])
+  applicantId String
+  applicant   User       @relation(fields: [applicantId], references: [id])
+
+  @@index([jobId])
+  @@index([applicantId])
+  @@index([status])
+  @@index([appliedAt])
+  @@map("JobApplication")
+}
+
+// Reviews and ratings
+model Review {
+  id           String   @id @default(cuid())
+  rating       Int // Valid values: 1-5, enforce in application logic
+  title        String?
+  comment      String
+  images       String[] // URLs of review images
+  isVerified   Boolean  @default(false)
+  helpfulCount Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relationships
+  reviewerId String
+  reviewer   User   @relation(fields: [reviewerId], references: [id])
+
+  // Review can be for a Business, Service, or Job Listing
+  businessId   String?
+  business     Business?   @relation(fields: [businessId], references: [id])
+  serviceId    String?
+  service      Service?    @relation(fields: [serviceId], references: [id])
+  jobListingId String?
+  jobListing   JobListing? @relation(fields: [jobListingId], references: [id])
+
+  @@index([rating])
+  @@index([reviewerId])
+  @@index([businessId])
+  @@index([serviceId])
+  @@index([jobListingId])
+  @@index([createdAt])
+  @@map("Review")
+}
+
+// Bookings/Appointments
+model Booking {
+  id              String        @id @default(cuid())
+  bookingDate     DateTime
+  startTime       DateTime
+  endTime         DateTime?
+  duration        Int? // in minutes
+  status          BookingStatus @default(PENDING)
+  totalAmount     Float
+  currency        String        @default("USD")
+  paymentStatus   PaymentStatus @default(PENDING)
+  notes           String?
+  specialRequests String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // Relationships
+  customerId String
+  customer   User      @relation(fields: [customerId], references: [id])
+  serviceId  String
+  service    Service   @relation(fields: [serviceId], references: [id])
+  businessId String
+  business   Business  @relation(fields: [businessId], references: [id])
+  payments   Payment[]
+
+  @@index([customerId])
+  @@index([serviceId])
+  @@index([businessId])
+  @@index([status])
+  @@index([bookingDate])
+  @@map("Booking")
+}
+
+// Payments
+model Payment {
+  id            String        @id @default(cuid())
+  amount        Float
+  currency      String        @default("USD")
+  paymentMethod String // "mpesa", "card", "bank_transfer"
+  transactionId String?
+  status        PaymentStatus @default(PENDING)
+  metadata      Json?
+  processedAt   DateTime?
+  createdAt     DateTime      @default(now())
+
+  // Relationships
+  bookingId   String
+  booking     Booking @relation(fields: [bookingId], references: [id])
+  payerId     String
+  payer       User    @relation("PaymentPayer", fields: [payerId], references: [id])
+  recipientId String
+  recipient   User    @relation("PaymentRecipient", fields: [recipientId], references: [id])
+
+  @@index([bookingId])
+  @@index([payerId])
+  @@index([recipientId])
+  @@index([status])
+  @@index([transactionId])
+  @@map("Payment")
+}
+
+// Messaging system
+model Message {
+  id          String   @id @default(cuid())
+  content     String
+  isRead      Boolean  @default(false)
+  attachments String[] // URLs of attached files/images
+  createdAt   DateTime @default(now())
+
+  // Relationships
+  senderId       String
+  sender         User          @relation("SentMessages", fields: [senderId], references: [id])
+  receiverId     String
+  receiver       User          @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  conversationId String?
+  conversation   Conversation? @relation(fields: [conversationId], references: [id])
+
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([conversationId])
+  @@index([createdAt])
+  @@map("Message")
+}
+
+// Conversation threads
+model Conversation {
+  id            String   @id @default(cuid())
+  title         String?
+  lastMessageAt DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relationships
+  participants    User[]                     @relation("ConversationParticipants")
+  messages        Message[]
+  participantRefs ConversationParticipants[]
+
+  @@index([lastMessageAt])
+  @@map("Conversation")
+}
+
+// Junction table for Conversation participants (explicit)
+model ConversationParticipants {
+  conversationId String
+  userId         String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user           User         @relation("ConversationParticipantsUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([conversationId, userId])
+  @@map("_ConversationParticipants")
+}
+
+// Notifications
+model Notification {
+  id        String           @id @default(cuid())
+  type      NotificationType
+  title     String
+  message   String
+  isRead    Boolean          @default(false)
+  data      Json? // Additional data for the notification
+  createdAt DateTime         @default(now())
+
+  // Relationships
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([type])
+  @@index([isRead])
+  @@index([createdAt])
+  @@map("Notification")
+}
+
+// Saved items (bookmarks)
+model SavedItem {
+  id        String        @id @default(cuid())
+  type      SavedItemType // BUSINESS, SERVICE, JOB
+  createdAt DateTime      @default(now())
+
+  // Relationships
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  // Reference to the saved item
+  businessId String?
+  business   Business?   @relation(fields: [businessId], references: [id])
+  serviceId  String?
+  service    Service?    @relation(fields: [serviceId], references: [id])
+  jobId      String?
+  job        JobListing? @relation(fields: [jobId], references: [id])
+
+  @@unique([userId, businessId])
+  @@unique([userId, serviceId])
+  @@unique([userId, jobId])
+  @@index([userId])
+  @@index([type])
+  @@map("SavedItem")
+}
+
+// Junction table for JobListing and JobCategory
+model JobListingCategories {
+  jobListingId  String
+  jobCategoryId String
+  jobListing    JobListing  @relation(fields: [jobListingId], references: [id], onDelete: Cascade)
+  jobCategory   JobCategory @relation(fields: [jobCategoryId], references: [id], onDelete: Cascade)
+
+  @@id([jobListingId, jobCategoryId])
+  @@map("_JobListingCategories")
+}
+
+// Enums
+enum Role {
+  ADMIN
+  BUSINESS_OWNER
+  JOB_SEEKER
+  CUSTOMER
+  EMPLOYER
+}
+
+enum BusinessStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+  REJECTED
+}
+
+enum SizeType {
+  SMALL
+  MEDIUM
+  LARGE
+}
+
+enum JobType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  TEMPORARY
+  INTERNSHIP
+  VOLUNTEER
+  FREELANCE
+  REMOTE
+}
+
+enum ExperienceLevel {
+  ENTRY
+  MID
+  SENIOR
+  EXECUTIVE
+}
+
+enum EducationLevel {
+  HIGH_SCHOOL
+  DIPLOMA
+  BACHELORS
+  MASTERS
+  PHD
+  OTHER
+}
+
+enum JobStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  CLOSED
+  EXPIRED
+}
+
+enum ApplicationStatus {
+  PENDING
+  REVIEWED
+  SHORTLISTED
+  INTERVIEWED
+  REJECTED
+  ACCEPTED
+  WITHDRAWN
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+  CANCELLED
+}
+
+enum NotificationType {
+  NEW_MESSAGE
+  JOB_APPLICATION
+  BOOKING_REQUEST
+  BOOKING_CONFIRMED
+  PAYMENT_RECEIVED
+  REVIEW_RECEIVED
+  SYSTEM_ALERT
+  PROMOTIONAL
+}
+
+enum SavedItemType {
+  BUSINESS
+  SERVICE
+  JOB
+}

@@ -94,7 +94,7 @@ const SingleAdvertPage = () => {
       try {
         setLoading(true)
         const businessId = params.id as string
-        console.log('📡 Fetching business data for ID:', businessId)
+       
         
         // Fetch business details
         const businessResponse = await fetch(`/api/Business/${businessId}`)
@@ -103,7 +103,7 @@ const SingleAdvertPage = () => {
         }
         
         const businessData = await businessResponse.json()
-        console.log('🏢 Business data:', businessData)
+       
         
         if (businessData.success && businessData.data) {
           setBusiness(businessData.data)
@@ -129,14 +129,14 @@ const SingleAdvertPage = () => {
             const galleryData = await galleryResponse.json()
             if (galleryData.success) {
               setAllGalleryImages(galleryData.data || [])
-              console.log(`📸 Loaded ${galleryData.data.length} real gallery images`)
+              console.log(`Loaded ${galleryData.data.length} real gallery images`)
             }
           }
         } else {
           console.error('Business not found with ID:', businessId)
         }
       } catch (error) {
-        console.error('❌ Error fetching business data:', error)
+        console.error(' Error fetching business data:', error)
       } finally {
         setLoading(false)
       }
@@ -175,7 +175,7 @@ const SingleAdvertPage = () => {
 
   // Handle opening service popup - NOW WITH REAL IMAGES
   const handleServiceClick = (serviceName: string) => {
-    console.log("📸 Service clicked:", serviceName);
+    console.log(" Service clicked:", serviceName);
     setSelectedService(serviceName)
     
     // Filter gallery images for this service
@@ -187,12 +187,12 @@ const SingleAdvertPage = () => {
       allGalleryImages.length === 0
     )
     
-    console.log("📷 Real images found for service:", serviceImages.length);
+    console.log(" Real images found for service:", serviceImages.length);
     
     // If no specific service images, show all gallery images
     if (serviceImages.length === 0 && allGalleryImages.length > 0) {
       setSelectedServiceImages(allGalleryImages)
-      console.log("🔄 Showing all gallery images instead");
+      console.log(" Showing all gallery images instead");
     } else {
       setSelectedServiceImages(serviceImages)
     }

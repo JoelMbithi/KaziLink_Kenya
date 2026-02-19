@@ -9,7 +9,7 @@ export async function GET(
     // Await the params object
     const { id } = await params;
     
-    console.log(`📦 Fetching services for business: ${id}`);
+    console.log(` Fetching services for business: ${id}`);
     
     const services = await prisma.service.findMany({
       where: { businessId: id },

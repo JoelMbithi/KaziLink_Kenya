@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma'
 
 export async function GET(request: Request) {
   try {
-    console.log('📊 Fetching REAL business data from database...')
+    console.log(' Fetching REAL business data from database...')
     
     // Get URL parameters
     const { searchParams } = new URL(request.url)
@@ -73,7 +73,7 @@ export async function GET(request: Request) {
       }
     })
     
-    console.log(`✅ Found ${businesses.length} REAL businesses in database`)
+    console.log(` Found ${businesses.length} REAL businesses in database`)
     
     return NextResponse.json({
       success: true,
@@ -85,7 +85,7 @@ export async function GET(request: Request) {
     })
     
   } catch (error: any) {
-    console.error('❌ ERROR fetching businesses:', {
+    console.error(' ERROR fetching businesses:', {
       message: error.message,
       code: error.code,
       meta: error.meta

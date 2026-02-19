@@ -85,13 +85,13 @@ const BUSINESS_GALLERY_IMAGES = {
 }
 
 async function main() {
-  console.log('🌱 Starting enhanced database seeding...')
+  console.log(' Starting enhanced database seeding...')
   
   const plainPassword = '@jhoelloh9045'
   const hashedPassword = await bcrypt.hash(plainPassword, 10)
 
   // Clear existing data
-  console.log('🧹 Clearing existing data...')
+  console.log(' Clearing existing data...')
   await prisma.$transaction([
     prisma.savedItem.deleteMany(),
     prisma.notification.deleteMany(),
@@ -109,7 +109,7 @@ async function main() {
     prisma.user.deleteMany(),
   ])
 
-  console.log('👤 Creating 20+ users...')
+  console.log(' Creating 20+ users...')
   const users = []
   
   // Create admin users
@@ -166,7 +166,7 @@ async function main() {
     }))
   }
 
-  console.log('🏢 Creating 15+ businesses...')
+  console.log('Creating 15+ businesses...')
   const businesses = []
 
   // Featured businesses with many images
@@ -292,7 +292,7 @@ async function main() {
 
     // Create gallery images for the business
     if (galleryImages) {
-      console.log(`🖼️ Creating ${galleryImages.length} gallery images for ${business.name}...`)
+      console.log(` Creating ${galleryImages.length} gallery images for ${business.name}...`)
       for (let i = 0; i < galleryImages.length; i++) {
         const url = galleryImages[i]
         if (url) { // Skip empty URLs
@@ -323,7 +323,7 @@ async function main() {
     businesses.push(business)
   }
 
-  console.log('🛠️ Creating services...')
+  console.log(' Creating services...')
   
   // Create services for each business with more variety
   const allServices = []
@@ -349,7 +349,7 @@ async function main() {
     }
   }
 
-  console.log('💼 Creating 20+ job listings...')
+  console.log(' Creating 20+ job listings...')
   
   // Create job categories
   const jobCategories = await Promise.all([
@@ -541,7 +541,7 @@ async function main() {
     jobListings.push(job)
   }
 
-  console.log('📄 Creating job applications...')
+  console.log(' Creating job applications...')
   for (let i = 0; i < 15; i++) {
     await prisma.jobApplication.create({
       data: {
@@ -555,7 +555,7 @@ async function main() {
     })
   }
 
-  console.log('⭐ Creating reviews...')
+  console.log(' Creating reviews...')
   for (let i = 0; i < 50; i++) {
     await prisma.review.create({
       data: {
@@ -571,7 +571,7 @@ async function main() {
     })
   }
 
-  console.log('📌 Creating saved items...')
+  console.log(' Creating saved items...')
   for (let i = 0; i < 20; i++) {
     await prisma.savedItem.create({
       data: {
@@ -583,20 +583,20 @@ async function main() {
     })
   }
 
-  console.log('✅ Enhanced database seeding completed successfully!')
-  console.log(`📊 Created:`)
-  console.log(`   👤 ${users.length} users`)
-  console.log(`   🏢 ${businesses.length} businesses (${featuredBusinesses.length} featured with 20+ images each)`)
-  console.log(`   🛠️ ${allServices.length} services`)
-  console.log(`   💼 ${jobListings.length} job listings`)
-  console.log(`   📄 15 job applications`)
-  console.log(`   ⭐ 50 reviews`)
-  console.log(`   📌 20 saved items`)
+  console.log(' Enhanced database seeding completed successfully!')
+  console.log(` Created:`)
+  console.log(`    ${users.length} users`)
+  console.log(`    ${businesses.length} businesses (${featuredBusinesses.length} featured with 20+ images each)`)
+  console.log(`    ${allServices.length} services`)
+  console.log(`    ${jobListings.length} job listings`)
+  console.log(`    15 job applications`)
+  console.log(`    50 reviews`)
+  console.log(`    20 saved items`)
 }
 
 main()
   .catch((e) => {
-    console.error('❌ Error during seeding:', e)
+    console.error(' Error during seeding:', e)
     process.exit(1)
   })
   .finally(async () => {

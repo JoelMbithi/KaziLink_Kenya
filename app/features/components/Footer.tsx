@@ -153,7 +153,7 @@ const Footer = () => {
         </div>
 
         {/* Popular Searches Section */}
-        <div className="mb-12">
+      {/*   <div className="mb-12">
           <h4 className="text-white font-semibold mb-6 text-lg">Popular Searches</h4>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
             {popularCities.map((city, index) => (
@@ -179,7 +179,7 @@ const Footer = () => {
             ))}
           </div>
         </div>
-
+ */}
         {/* Company Links */}
         <div className="mb-8">
           <div className="flex flex-wrap gap-6">

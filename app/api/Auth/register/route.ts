@@ -3,12 +3,12 @@ import prisma from '@/lib/prisma'
 import bcrypt from "bcryptjs";
 
 export async function POST(request: NextRequest) {
-    console.log("🔵 REGISTER API CALLED");
+   
     
     try {
         // Log the raw request
         const body = await request.json();
-        console.log("📦 Request body received:", JSON.stringify(body, null, 2));
+        console.log(" Request body received:", JSON.stringify(body, null, 2));
 
         // Destructure with validation
         const {
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
         if (!password) missingFields.push('password');
         if (!accountType) missingFields.push('accountType');
 
-        console.log("🔍 Validation check:", {
+        console.log(" Validation check:", {
             hasFullName: !!fullName,
             hasEmail: !!email,
             hasPhone: !!phone,
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
         });
 
         if (missingFields.length > 0) {
-            console.log("❌ Missing required fields:", missingFields);
+            console.log(" Missing required fields:", missingFields);
             return NextResponse.json(
                 { 
                     success: false, 
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
         // Validate email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            console.log("❌ Invalid email format:", email);
+            console.log(" Invalid email format:", email);
             return NextResponse.json(
                 { success: false, error: "Invalid email format" },
                 { status: 400 }
@@ -77,13 +77,13 @@ export async function POST(request: NextRequest) {
         }
 
         // Check if user exists
-        console.log("🔍 Checking for existing user with email:", email);
+        console.log(" Checking for existing user with email:", email);
         const existingUser = await prisma.user.findUnique({
             where: { email }
         });
 
         if (existingUser) {
-            console.log("❌ User already exists:", email);
+            console.log(" User already exists:", email);
             return NextResponse.json(
                 { success: false, error: "User with this email already exists" },
                 { status: 400 }
@@ -91,12 +91,12 @@ export async function POST(request: NextRequest) {
         }
 
         // Hash password
-        console.log("🔐 Hashing password...");
+        console.log(" Hashing password...");
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Determine role
         const role = accountType === 'employer' ? 'EMPLOYER' : 'JOB_SEEKER';
-        console.log("👤 Account type:", accountType, "-> Role:", role);
+        console.log(" Account type:", accountType, "-> Role:", role);
 
         // Prepare data based on account type
         let userData: any = {
@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
 
         // Add job seeker fields if applicable
         if (accountType === 'jobseeker') {
-            console.log("📝 Adding job seeker fields");
+           
             userData = {
                 ...userData,
                 skills: skills || [],
@@ -122,7 +122,7 @@ export async function POST(request: NextRequest) {
 
         // Add employer fields if applicable
         if (accountType === 'employer') {
-            console.log("🏢 Adding employer fields");
+           
             userData = {
                 ...userData,
                 companyName: companyName || null,
@@ -135,17 +135,14 @@ export async function POST(request: NextRequest) {
             };
         }
 
-        console.log("💾 Creating user with data:", JSON.stringify({
-            ...userData,
-            password: '[REDACTED]'
-        }, null, 2));
+       
 
         // Create user
         const user = await prisma.user.create({
             data: userData
         });
 
-        console.log("✅ User created successfully with ID:", user.id);
+        console.log(" User created successfully with ID:", user.id);
 
         // Remove password from response
         const { password: _, ...userWithoutPassword } = user;
@@ -157,7 +154,7 @@ export async function POST(request: NextRequest) {
         });
 
     } catch (error: any) {
-        console.error('❌ Registration error:', {
+        console.error(' Registration error:', {
             message: error.message,
             code: error.code,
             meta: error.meta,

@@ -79,7 +79,7 @@ const fetchData = async () => {
   try {
     setLoading(true)
     setError(null)
-    console.log('🔍 Fetching REAL data from APIs...')
+    console.log(' Fetching REAL data from APIs...')
     
     // Fetch businesses
     let businessesData: Business[] = []
@@ -135,10 +135,10 @@ const fetchData = async () => {
     setBusinesses(businessesData)
     setJobListings(jobsData)
     
-    console.log(`✅ Loaded ${businessesData.length} businesses and ${jobsData.length} jobs (REAL DATA)`)
+    console.log(` Loaded ${businessesData.length} businesses and ${jobsData.length} jobs (REAL DATA)`)
     
   } catch (error: any) {
-    console.error('❌ Error in fetchData:', error)
+    console.error(' Error in fetchData:', error)
     setError('Failed to load data from database')
   } finally {
     setLoading(false)

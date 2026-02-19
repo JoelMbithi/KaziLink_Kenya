@@ -132,7 +132,7 @@ const RegisterPage = () => {
     }
 
     try {
-        console.log('📤 Sending registration data:', {
+        console.log(' Sending registration data:', {
             ...formData,
             password: '[REDACTED]',
             confirmPassword: '[REDACTED]'
@@ -146,19 +146,17 @@ const RegisterPage = () => {
             body: JSON.stringify(formData)
         })
 
-        console.log('📥 Response status:', response.status)
-        console.log('📥 Response headers:', Object.fromEntries(response.headers.entries()))
-
+       
         // Get response text first
         const responseText = await response.text()
-        console.log('📥 Raw response text:', responseText)
+        
 
         // Try to parse as JSON
         let result
         try {
             result = JSON.parse(responseText)
         } catch (e) {
-            console.error('❌ Failed to parse response as JSON:', responseText)
+            console.error(' Failed to parse response as JSON:', responseText)
             throw new Error(`Server returned invalid JSON. Status: ${response.status}, Response: ${responseText.substring(0, 100)}`)
         }
 
@@ -167,7 +165,7 @@ const RegisterPage = () => {
         }
 
         if (result.success) {
-            console.log('✅ Registration successful, attempting auto-login...')
+            console.log(' Registration successful, attempting auto-login...')
             
             const loginResult = await signIn('credentials', {
                 email: formData.email,
@@ -176,10 +174,10 @@ const RegisterPage = () => {
             })
 
             if (loginResult?.ok) {
-                console.log('✅ Auto-login successful, redirecting...')
+                console.log(' Auto-login successful, redirecting...')
                 router.push('/')
             } else {
-                console.error('❌ Auto-login failed:', loginResult?.error)
+                console.error(' Auto-login failed:', loginResult?.error)
                 alert('Account created! Please sign in manually.')
                 router.push('/features/Auth/login')
             }
@@ -187,7 +185,7 @@ const RegisterPage = () => {
             alert(result.error || 'Registration failed')
         }
     } catch (error) {
-        console.error('❌ Registration error:', error)
+        console.error(' Registration error:', error)
         alert(error instanceof Error ? error.message : 'Something went wrong. Please try again.')
     } finally {
         setLoading(false)

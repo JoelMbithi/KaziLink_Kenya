@@ -9,7 +9,7 @@ export async function GET(
     // Await the params object
     const { id } = await params;
     
-    console.log(`📡 Fetching business with ID: ${id}`);
+    console.log(` Fetching business with ID: ${id}`);
     
     const business = await prisma.business.findUnique({
       where: { id: id },

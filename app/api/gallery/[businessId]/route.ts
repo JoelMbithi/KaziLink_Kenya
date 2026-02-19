@@ -9,7 +9,7 @@ export async function GET(
     // Await the params object
     const { businessId } = await params;
     
-    console.log(`📸 Fetching gallery images for business: ${businessId}`);
+    console.log(` Fetching gallery images for business: ${businessId}`);
     
     // Fetch gallery images for this business
     const galleryImages = await prisma.galleryImage.findMany({
@@ -21,7 +21,7 @@ export async function GET(
       }
     });
     
-    console.log(`✅ Found ${galleryImages.length} gallery images`);
+    console.log(` Found ${galleryImages.length} gallery images`);
     
     return NextResponse.json({
       success: true,
@@ -31,7 +31,7 @@ export async function GET(
     });
     
   } catch (error: any) {
-    console.error('❌ Error fetching gallery images:', error);
+    console.error(' Error fetching gallery images:', error);
     
     return NextResponse.json({
       success: false,

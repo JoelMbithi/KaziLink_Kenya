@@ -39,7 +39,7 @@ const HeroSection = () => {
               <span className="absolute bottom-2 left-0 w-full h-3 bg-[#C9A227]/20 -rotate-1"></span>
             </span>
             <br />
-            <span className="text-[#01d432]">in Kenya</span>
+            <span className="text-emerald-600">in Kenya</span>
           </h1>
           
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">

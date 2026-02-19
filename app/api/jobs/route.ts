@@ -3,16 +3,16 @@ import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
   try {
-    console.log('🎯 Attempting to fetch jobs from database...')
+    console.log(' Attempting to fetch jobs from database...')
     
     // Try to import prisma dynamically
     let prisma
     try {
       const module = await import('@/lib/prisma')
       prisma = module.default
-      console.log('✅ Prisma client loaded successfully')
+      console.log(' Prisma client loaded successfully')
     } catch (prismaError: any) {
-      console.error('❌ Failed to load Prisma client:', prismaError.message)
+      console.error(' Failed to load Prisma client:', prismaError.message)
       return NextResponse.json({
         success: false,
         error: 'Database connection failed',
@@ -103,7 +103,7 @@ export async function GET(request: Request) {
       }
     })
     
-    console.log(`✅ Successfully fetched ${jobs.length} jobs from database`)
+    console.log(` Successfully fetched ${jobs.length} jobs from database`)
     
     return NextResponse.json({
       success: true,
@@ -115,7 +115,7 @@ export async function GET(request: Request) {
     })
     
   } catch (error: any) {
-    console.error('❌ ERROR in jobs API:', {
+    console.error(' ERROR in jobs API:', {
       message: error.message,
       code: error.code,
       meta: error.meta,
